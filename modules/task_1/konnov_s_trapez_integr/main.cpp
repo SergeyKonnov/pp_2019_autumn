@@ -15,7 +15,7 @@ TEST(Trapez_Integr, Test_Sequential_Integral) {
         double i2 = 39.5;
         EXPECT_NEAR(i1, i2, 1e-9);
     }
-}   
+}
 
 TEST(Trapez_Integr, Test_Sequetional_Integral_On_Sin_Function) {
     int rank;
@@ -50,14 +50,13 @@ TEST(Trapez_Integr, Test_Parallel_Integral_On_Sin_Function) {
     }
 }
 
-
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     MPI_Init(&argc, &argv);
 
     ::testing::AddGlobalTestEnvironment(new GTestMPIListener::MPIEnvironment);
     ::testing::TestEventListeners& listeners =
-	    ::testing::UnitTest::GetInstance()->listeners();
+        ::testing::UnitTest::GetInstance()->listeners();
 
     listeners.Release(listeners.default_result_printer());
     listeners.Release(listeners.default_xml_generator());
