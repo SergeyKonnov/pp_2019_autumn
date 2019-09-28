@@ -46,7 +46,6 @@ double GetTrapezIntegrParallel(double l, double r, int n, const std::function<do
             local_integral += f(left) / 2 * step;
         if (r != right)
             local_integral += f(right) / 2 * step;
-    
     }
 
     MPI_Reduce(&local_integral, &global_integral, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
