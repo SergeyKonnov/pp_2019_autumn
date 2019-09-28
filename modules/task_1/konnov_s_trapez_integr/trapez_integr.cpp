@@ -6,17 +6,20 @@
 #include <algorithm>
 
 double GetTrapezIntegrParallel(double l, double r, int n, const std::function<double(double)>& f) {
-    const double step = (r - l) / static_cast<double>(n);
     int size, rank;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
     if (size == 1)
         return GetTrapezIntegrSequential(l, r, n, f);
 
+    const double step = (r - l) / static_cast<double>(n);
     const int delta = n / size;
     double left, right;
     int portion = 0;
     double local_integral = 0;
+    double global_integral = 0;
+
     if (rank == 0) {
         left = l, right = l + step * delta - step, portion = delta-1;
         for (int i = 1; i < size - 1; i++) {
@@ -45,7 +48,7 @@ double GetTrapezIntegrParallel(double l, double r, int n, const std::function<do
             local_integral += f(right) / 2 * step;
     
     }
-    double global_integral = 0;
+
     MPI_Reduce(&local_integral, &global_integral, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
     return global_integral;
 }
@@ -55,7 +58,6 @@ double GetTrapezIntegrSequential(double l, double r, int n, const std::function<
     double integral = f(l) / 2 + f(r) / 2;
     for (double i = l + step; i < r; i += step)
         integral += f(i);
-
     integral*=step;
     return integral;
 }
