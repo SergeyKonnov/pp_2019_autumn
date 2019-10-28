@@ -2,10 +2,10 @@
 #include <gtest-mpi-listener.hpp>
 #include <gtest/gtest.h>
 #include <mpi.h>
+#include <algorithm>
 #include <cmath>
 #include <functional>
 #include "./trapez_integr.h"
-#include <algorithm>
 TEST(Trapez_Integr, Test_Sequential_Integral) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
