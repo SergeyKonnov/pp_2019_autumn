@@ -28,13 +28,13 @@ double GetTrapezIntegrParallel(double l, double r, int n, const std::function<do
     double local_integral = 0, global_integral = 0;
     double left = l + static_cast<double>(begin) * (r - l) / static_cast<double>(n);
     for (int i = 0; i < portion; i++) {
-        if (abs(left - l) < 1e-9)
+        if (std::abs(left - l) < 1e-9)
             local_integral += f(left) / 2;
         else
             local_integral += f(left);
         left += (r - l) / static_cast<double>(n);
     }
-    if (abs(left - r) < 1e-9)
+    if (std::abs(left - r) < 1e-9)
         local_integral += f(left)/2;
 
     MPI_Reduce(&local_integral, &global_integral, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
