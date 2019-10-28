@@ -4,6 +4,7 @@
 #include <functional>
 #include <iostream>
 #include <algorithm>
+#include <cmath>
 
 double GetTrapezIntegrParallel(double l, double r, int n, const std::function<double(double)>& f) {
     int size, rank;

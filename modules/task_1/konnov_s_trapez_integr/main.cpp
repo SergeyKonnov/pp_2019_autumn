@@ -6,6 +6,7 @@
 #include <cmath>
 #include <functional>
 #include "./trapez_integr.h"
+
 TEST(Trapez_Integr, Test_Sequential_Integral) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
