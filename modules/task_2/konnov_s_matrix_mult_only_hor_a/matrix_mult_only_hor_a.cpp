@@ -29,10 +29,11 @@ std::vector<int> matrix_mult_parallel(const std::vector<int>& aa, const std::vec
         MPI_Status status;
         MPI_Recv(a.data(), portion, MPI_INT, 0, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
     }
-    if (rank == 0)
+    if (rank == 0) {
         ans.resize(msize * msize);
-    else
+    } else {
         ans.resize(msize * portion);
+    }
     for (int i = 0; i < portion / msize; i++)
         for (int j = 0; j < msize; j++) {
              ans[i * msize + j] = 0;

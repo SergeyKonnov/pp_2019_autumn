@@ -59,8 +59,9 @@ TEST(Matrix_Mult_Only_Hor_A, Test_Parallel_Matrix_On_Big_Size) {
     }
     MPI_Barrier(MPI_COMM_WORLD);
     d = matrix_mult_parallel(a, b, size);
-    if (rank == 0)
+    if (rank == 0) {
         ASSERT_EQ(c, d);
+    }
 }
 
 TEST(Matrix_Mult_Only_Hor_A, Test_Parallel_Matrix_On_Size_Equal_One) {
@@ -71,8 +72,9 @@ TEST(Matrix_Mult_Only_Hor_A, Test_Parallel_Matrix_On_Size_Equal_One) {
         c = matrix_mult_sequential(a, b, 1);
     }
     d = matrix_mult_parallel(a, b, 1);
-    if (rank == 0)
+    if (rank == 0) {
         ASSERT_EQ(c, d);
+    }
 }
 
 int main(int argc, char** argv) {
