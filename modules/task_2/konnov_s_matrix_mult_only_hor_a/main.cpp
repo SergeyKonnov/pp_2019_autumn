@@ -8,7 +8,7 @@
 TEST(Matrix_Mult_Only_Hor_A, Test_Sequential_Matrix_Multiplication) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    if(rank == 0) {
+    if (rank == 0) {
         std::vector<int>a, b, c;
         for(int i = 0; i < 9; i++) {
             a.push_back(i+1);
@@ -23,7 +23,7 @@ TEST(Matrix_Mult_Only_Hor_A, Test_Sequential_Matrix_Multiplication) {
 TEST(Matrix_Mult_Only_Hor_A, Test_Sequential_Matrix_On_Size_Equal_One) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    if(rank == 0) {
+    if (rank == 0) {
         std::vector<int>a = {5}, b = {10}, c, d = {50};
         c = matrix_mult_sequential(a, b, 1);
         ASSERT_EQ(c, d);
@@ -34,7 +34,7 @@ TEST(Matrix_Mult_Only_Hor_A, Test_Parallel_Matrix_On_Small_Size) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<int>a, b, c, d;
-    if(rank == 0) {
+    if (rank == 0) {
         for(int i = 0; i < 9; i++) {
             a.push_back(i+1);
             b.push_back(9-i);
@@ -42,7 +42,7 @@ TEST(Matrix_Mult_Only_Hor_A, Test_Parallel_Matrix_On_Small_Size) {
         c = matrix_mult_sequential(a, b, 3);
     }
     d = matrix_mult_parallel(a, b, 3);
-    if(rank == 0) {
+    if (rank == 0) {
         ASSERT_EQ(c, d);
     }
 }
@@ -52,14 +52,14 @@ TEST(Matrix_Mult_Only_Hor_A, Test_Parallel_Matrix_On_Big_Size) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<int>a, b, c, d;
     int size = 500;
-    if(rank == 0) {
+    if (rank == 0) {
         a = generate_matrix(size, 0);
         b = generate_matrix(size, 1);
         c = matrix_mult_sequential(a, b, size);
     }
     MPI_Barrier(MPI_COMM_WORLD);
     d = matrix_mult_parallel(a, b, size);
-    if(rank == 0)
+    if (rank == 0)
         ASSERT_EQ(c, d);
 }
 
@@ -67,11 +67,11 @@ TEST(Matrix_Mult_Only_Hor_A, Test_Parallel_Matrix_On_Size_Equal_One) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<int>a = {5}, b = {10}, c, d;
-    if(rank == 0) {
+    if (rank == 0) {
         c = matrix_mult_sequential(a, b, 1);
     }
     d = matrix_mult_parallel(a, b, 1);
-    if(rank == 0)
+    if (rank == 0)
         ASSERT_EQ(c, d);
 }
 
