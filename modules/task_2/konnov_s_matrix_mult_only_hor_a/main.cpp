@@ -10,7 +10,7 @@ TEST(Matrix_Mult_Only_Hor_A, Test_Sequential_Matrix_Multiplication) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     if (rank == 0) {
         std::vector<int>a, b, c;
-        for(int i = 0; i < 9; i++) {
+        for (int i = 0; i < 9; i++) {
             a.push_back(i+1);
             b.push_back(9-i);
         }
@@ -35,7 +35,7 @@ TEST(Matrix_Mult_Only_Hor_A, Test_Parallel_Matrix_On_Small_Size) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<int>a, b, c, d;
     if (rank == 0) {
-        for(int i = 0; i < 9; i++) {
+        for (int i = 0; i < 9; i++) {
             a.push_back(i+1);
             b.push_back(9-i);
         }
