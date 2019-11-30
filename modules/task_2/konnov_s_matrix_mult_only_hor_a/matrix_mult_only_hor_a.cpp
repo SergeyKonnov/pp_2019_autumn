@@ -6,7 +6,7 @@
 #include <vector>
 
 std::vector<int> matrix_mult_parallel(const std::vector<int>& aa, const std::vector<int>&bb, int msize) {
-    std::vector<int>a, b = bb;
+    std::vector<int> a, b = bb;
     std::vector<int> ans;
     int rank, size;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -24,7 +24,7 @@ std::vector<int> matrix_mult_parallel(const std::vector<int>& aa, const std::vec
             MPI_Send(aa.data()+teq, teqportion, MPI_INT, i, 0, MPI_COMM_WORLD);
             teq+=teqportion;
         }
-        for(int i = 0; i < portion; i++) {
+        for (int i = 0; i < portion; i++) {
             a[i] = aa[i];
         }
     } else if (portion > 0) {
