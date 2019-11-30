@@ -6,7 +6,7 @@
 #include <vector>
 
 std::vector<int> matrix_mult_parallel(const std::vector<int>& aa, const std::vector<int>&bb, int msize) {
-    std::vector<int> a = aa, b = bb;
+    std::vector<int>a, b = bb;
     std::vector<int> ans;
     int rank, size;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -14,16 +14,18 @@ std::vector<int> matrix_mult_parallel(const std::vector<int>& aa, const std::vec
     b.resize(msize * msize);
     MPI_Bcast(b.data(), msize * msize, MPI_INT, 0, MPI_COMM_WORLD);
     int portion = msize * ((rank < msize % size)?msize / size + 1:msize / size);
-    if (rank != 0)
-        a.resize(portion*size);
+    a.resize(portion);
     if (rank == 0) {
         int teq = portion;
         for (int i = 1; i < size; i++) {
             if (teq == msize*msize)
                 break;
             int teqportion = msize*((i < msize % size)?msize / size + 1:msize / size);
-            MPI_Send(a.data()+teq, teqportion, MPI_INT, i, 0, MPI_COMM_WORLD);
+            MPI_Send(aa.data()+teq, teqportion, MPI_INT, i, 0, MPI_COMM_WORLD);
             teq+=teqportion;
+        }
+        for(int i = 0; i < portion; i++) {
+            a[i] = aa[i];
         }
     } else if (portion > 0) {
         MPI_Status status;
@@ -32,7 +34,7 @@ std::vector<int> matrix_mult_parallel(const std::vector<int>& aa, const std::vec
     if (rank == 0) {
         ans.resize(msize * msize);
     } else {
-        ans.resize(msize * portion);
+        ans.resize(portion);
     }
     for (int i = 0; i < portion / msize; i++)
         for (int j = 0; j < msize; j++) {
@@ -51,7 +53,7 @@ std::vector<int> matrix_mult_parallel(const std::vector<int>& aa, const std::vec
             teq+=teqportion;
         }
     } else if (portion > 0) {
-        MPI_Send(&ans[0], portion, MPI_INT, 0, 0, MPI_COMM_WORLD);
+        MPI_Send(ans.data(), portion, MPI_INT, 0, 0, MPI_COMM_WORLD);
     }
     return ans;
 }
