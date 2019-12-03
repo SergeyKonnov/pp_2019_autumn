@@ -4,6 +4,7 @@
 #include <iostream>
 #include <random>
 #include <vector>
+#include <utility>
 
 std::vector<int> matrix_mult_parallel(const std::vector<int>& aa, const std::vector<int>&bb, int msize) {
     std::vector<int> a, b = bb;
@@ -13,15 +14,16 @@ std::vector<int> matrix_mult_parallel(const std::vector<int>& aa, const std::vec
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
     b.resize(msize * msize);
-    if (rank == 0)
+    if (rank == 0) {
         for (int i = 0; i < msize; i++)
             for (int j = 0; j < i; j++)
                 std::swap(b[i*msize+j], b[j*msize+i]);
+    }
     MPI_Bcast(b.data(), msize * msize, MPI_INT, 0, MPI_COMM_WORLD);
 
     int portion = msize * ((rank < msize % size)?msize / size + 1:msize / size);
     a.resize(portion + 1);
-    
+
     if (rank == 0) {
         int teq = portion;
         for (int i = 1; i < size; i++) {
