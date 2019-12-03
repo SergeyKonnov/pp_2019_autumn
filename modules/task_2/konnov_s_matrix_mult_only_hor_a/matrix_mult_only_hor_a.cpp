@@ -18,10 +18,11 @@ std::vector<int> matrix_mult_parallel(const std::vector<int>& aa, const std::vec
     std::vector<int>sendcounts(size), displs(size);
     for (int i = 0 ; i < size; i++) {
         sendcounts[i] =  msize * ((i < msize % size)?msize / size + 1:msize / size);
-        if (i != 0)
+        if (i != 0) {
             displs[i] = displs[i-1] + sendcounts[i-1];
-        else
+        } else {
             displs[i] = 0;
+        }
     }
     //MPI_Scatterv(aa.data(), sendcounts.data(), displs.data(), MPI_INT, a.data(), msize*msize, MPI_INT, 0, MPI_COMM_WORLD);
     if (rank == 0) {
