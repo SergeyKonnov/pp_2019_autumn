@@ -24,7 +24,8 @@ std::vector<int> matrix_mult_parallel(const std::vector<int>& aa, const std::vec
             displs[i] = 0;
         }
     }
-    //MPI_Scatterv(aa.data(), sendcounts.data(), displs.data(), MPI_INT, a.data(), msize*msize, MPI_INT, 0, MPI_COMM_WORLD);
+    // MPI_Scatterv(aa.data(), sendcounts.data(), 
+    // displs.data(), MPI_INT, a.data(), msize*msize, MPI_INT, 0, MPI_COMM_WORLD);
     if (rank == 0) {
         int teq = portion;
         for (int i = 1; i < size; i++) {
@@ -34,7 +35,7 @@ std::vector<int> matrix_mult_parallel(const std::vector<int>& aa, const std::vec
             MPI_Send(aa.data()+teq, teqportion, MPI_INT, i, 0, MPI_COMM_WORLD);
             teq+=teqportion;
         }
-        for(int i = 0; i < portion; i++) {
+        for (int i = 0; i < portion; i++) {
             a[i] = aa[i];
         }
     } else if (portion > 0) {
@@ -49,9 +50,10 @@ std::vector<int> matrix_mult_parallel(const std::vector<int>& aa, const std::vec
                  ans[i * msize + j] += a[i * msize + k] * b[k * msize + j];
         }
     std::vector<int> ans2;
-    if(rank == 0)
+    if (rank == 0)
         ans2.resize(msize*msize);
-    MPI_Gatherv(ans.data(), portion, MPI_INT, ans2.data(), sendcounts.data(), displs.data(), MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Gatherv(ans.data(), portion, MPI_INT, 
+                ans2.data(), sendcounts.data(), displs.data(), MPI_INT, 0, MPI_COMM_WORLD);
     return ans2;
 }
 
