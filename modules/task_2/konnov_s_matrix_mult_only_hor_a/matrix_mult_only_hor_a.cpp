@@ -6,26 +6,22 @@
 #include <vector>
 
 std::vector<int> matrix_mult_parallel(const std::vector<int>& aa, const std::vector<int>&bb, int msize) {
-    std::vector<int>a, b = bb;
+    std::vector<int> a, b = bb;
     std::vector<int> ans;
     int rank, size;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
     b.resize(msize * msize);
+    if (rank == 0)
+        for (int i = 0; i < msize; i++)
+            for (int j = 0; j < i; j++)
+                std::swap(b[i*msize+j], b[j*msize+i]);
     MPI_Bcast(b.data(), msize * msize, MPI_INT, 0, MPI_COMM_WORLD);
+
     int portion = msize * ((rank < msize % size)?msize / size + 1:msize / size);
     a.resize(portion + 1);
-    std::vector<int>sendcounts(size), displs(size);
-    for (int i = 0 ; i < size; i++) {
-        sendcounts[i] =  msize * ((i < msize % size)?msize / size + 1:msize / size);
-        if (i != 0) {
-            displs[i] = displs[i-1] + sendcounts[i-1];
-        } else {
-            displs[i] = 0;
-        }
-    }
-    // MPI_Scatterv(aa.data(), sendcounts.data(), 
-    // displs.data(), MPI_INT, a.data(), msize*msize, MPI_INT, 0, MPI_COMM_WORLD);
+    
     if (rank == 0) {
         int teq = portion;
         for (int i = 1; i < size; i++) {
@@ -42,18 +38,29 @@ std::vector<int> matrix_mult_parallel(const std::vector<int>& aa, const std::vec
         MPI_Status status;
         MPI_Recv(a.data(), portion, MPI_INT, 0, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
     }
+
     ans.resize(portion);
     for (int i = 0; i < portion / msize; i++)
         for (int j = 0; j < msize; j++) {
              ans[i * msize + j] = 0;
              for (int k = 0; k < msize; k++)
-                 ans[i * msize + j] += a[i * msize + k] * b[k * msize + j];
+                 ans[i * msize + j] += a[i * msize + k] * b[j * msize + k];
         }
+
     std::vector<int> ans2;
     if (rank == 0)
         ans2.resize(msize*msize);
-    MPI_Gatherv(ans.data(), portion, MPI_INT, 
-                ans2.data(), sendcounts.data(), displs.data(), MPI_INT, 0, MPI_COMM_WORLD);
+    std::vector<int> recvcounts(size), displs(size);
+    for (int i = 0 ; i < size; i++) {
+        recvcounts[i] =  msize * ((i < msize % size)?msize / size + 1:msize / size);
+        if (i != 0) {
+            displs[i] = displs[i-1] + recvcounts[i-1];
+        } else {
+            displs[i] = 0;
+        }
+    }
+    MPI_Gatherv(ans.data(), portion, MPI_INT,
+                ans2.data(), recvcounts.data(), displs.data(), MPI_INT, 0, MPI_COMM_WORLD);
     return ans2;
 }
 
