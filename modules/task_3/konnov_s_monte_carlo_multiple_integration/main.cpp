@@ -7,7 +7,7 @@
 #include <cmath>
 #include "./monte_carlo_multiple_integration.h"
 
-#define abs_error 0.5  // ?
+#define abs_error 0.75  // ?
 #define count_of_dots 100000
 const double PI = acos(-1);
 
