@@ -15,7 +15,7 @@ const double PI = acos(-1);
 TEST(monteCarloMultipleIntegraion, One_Dimensional_Function_On_Sin_Sequentional) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    if(rank == 0) {
+    if (rank == 0) {
         double lower_limit = 0., upper_limit = PI/2;
         std::function<double(const std::vector<double>&)> f = [](const std::vector<double>& v) {return sin(v[0]);};
         double ans = monteCarloMultipleIntegraionSequentional({lower_limit}, {upper_limit}, count_of_dots, f, 1);
@@ -28,7 +28,7 @@ TEST(monteCarloMultipleIntegraion, One_Dimensional_Function_On_Big_Interval_Sequ
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     if (rank == 0) {
-        std::function<double(const std::vector<double>&)>f = 
+        std::function<double(const std::vector<double>&)>f =
                     [](const std::vector<double>& v) {return v[0]*v[0];};
         double lower_limit = 0., upper_limit = 5.;
         double ans = monteCarloMultipleIntegraionSequentional({lower_limit}, {upper_limit}, count_of_dots, f, 2);
@@ -41,7 +41,7 @@ TEST(monteCarloMultipleIntegraion, Two_Dimensional_Function_On_Big_Interval_Sequ
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     if (rank == 0) {
-        std::function<double(const std::vector<double>&)>f = 
+        std::function<double(const std::vector<double>&)>f =
                         [](const std::vector<double>& v) {return v[0]*v[0] + v[1]*v[1];};
         std::vector<double>lower_limits = {0., 0.}, upper_limits = {3., 3.};
         double ans = monteCarloMultipleIntegraionSequentional(lower_limits, upper_limits, count_of_dots, f, 3);
@@ -53,7 +53,7 @@ TEST(monteCarloMultipleIntegraion, Two_Dimensional_Function_On_Big_Interval_Sequ
 TEST(monteCarloMultipleIntegraion, One_Dimensional_Function_On_Big_Interval) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    std::function<double(const std::vector<double>&)>f = 
+    std::function<double(const std::vector<double>&)>f =
                     [](const std::vector<double>& v) {return v[0]*v[0];};
     double lower_limit = 0., upper_limit = 5.;
     double ans = monteCarloMultipleIntegraion({lower_limit}, {upper_limit}, count_of_dots, f, 4);
@@ -67,7 +67,7 @@ TEST(monteCarloMultipleIntegraion, One_Dimensional_Function_On_Big_Interval) {
 TEST(monteCarloMultipleIntegraion, One_Dimensional_Function_On_Small_Interval) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    std::function<double(const std::vector<double>&)>f = 
+    std::function<double(const std::vector<double>&)>f =
                     [](const std::vector<double>& v) {return v[0]*v[0];};
     double lower_limit = 0., upper_limit = 1.;
     double ans = monteCarloMultipleIntegraion({lower_limit}, {upper_limit}, count_of_dots, f, 5);
@@ -81,7 +81,7 @@ TEST(monteCarloMultipleIntegraion, One_Dimensional_Function_On_Small_Interval) {
 TEST(monteCarloMultipleIntegration, Two_Dimensional_Function_On_Small_Interval) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    std::function<double(const std::vector<double>&)>f = 
+    std::function<double(const std::vector<double>&)>f =
                     [](const std::vector<double>& v) {return v[0]*v[0] + v[1]*v[1];};
     std::vector<double>lower_limits = {0., 0.}, upper_limits = {3., 3.};
     double ans = monteCarloMultipleIntegraion(lower_limits, upper_limits, count_of_dots, f, 6);

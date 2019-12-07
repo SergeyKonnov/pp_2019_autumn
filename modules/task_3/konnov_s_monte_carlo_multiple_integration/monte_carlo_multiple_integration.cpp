@@ -4,9 +4,13 @@
 #include <random>
 #include <ctime>
 #include <iostream>
+#include <vector>
 
-double monteCarloMultipleIntegraion (const std::vector<double> lower_limits, const std::vector<double> upper_limits, int count_of_dots, 
-                                            const std::function<double(const std::vector<double>&)>& f, int seed) {
+double monteCarloMultipleIntegraion(const std::vector<double>& lower_limits,
+                                    const std::vector<double>& upper_limits,
+                                    int count_of_dots,
+                                    const std::function<double(const std::vector<double>&)>& f,
+                                    int seed = -1) {
     if (lower_limits.empty() || upper_limits.empty())
         throw "count of limits must be postive";
     if (lower_limits.size() != upper_limits.size())
@@ -22,9 +26,9 @@ double monteCarloMultipleIntegraion (const std::vector<double> lower_limits, con
     double count_of_dots_proc = count_of_dots/size + (rank < count_of_dots%size?1:0);
     double lower_limit = lower_limits[0] + static_cast<double>(rank)*delta;
     double upper_limit = lower_limit + delta;
-    
+
     std::mt19937 mt;
-    if(seed == -1) {
+    if (seed == -1) {
         mt = std::mt19937(time(0));
     } else {
         mt = std::mt19937(seed);
@@ -52,16 +56,19 @@ double monteCarloMultipleIntegraion (const std::vector<double> lower_limits, con
     return global_ans;
 }
 
-double monteCarloMultipleIntegraionSequentional(const std::vector<double> lower_limits, const std::vector<double> upper_limits, int count_of_dots, 
-                                            const std::function<double(const std::vector<double>&)>& f, int seed) {
+double monteCarloMultipleIntegraionSequentional(const std::vector<double>& lower_limits,
+                                                const std::vector<double>& upper_limits,
+                                                int count_of_dots,
+                                                const std::function<double(const std::vector<double>&)>& f,
+                                                int seed = -1) {
     if (lower_limits.empty() || upper_limits.empty())
         throw "count of limits must be postive";
     if (lower_limits.size() != upper_limits.size())
         throw "count of lower and upper limits must be equal";
     if (count_of_dots <= 0)
-        throw "count of dots must be positive";        
+        throw "count of dots must be positive";
     std::mt19937 mt;
-    if(seed == -1) {
+    if (seed == -1) {
         mt = std::mt19937(time(0));
     } else {
         mt = std::mt19937(seed);
@@ -76,7 +83,7 @@ double monteCarloMultipleIntegraionSequentional(const std::vector<double> lower_
             tmp[i] = rand[i](mt);
         ans += f(tmp);
     }
-    for(int i = 0; i < lower_limits.size(); i++) {
+    for (int i = 0; i < lower_limits.size(); i++) {
         ans *= (upper_limits[i]-lower_limits[i]);
     }
     ans /= count_of_dots;
