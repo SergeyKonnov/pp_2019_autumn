@@ -20,7 +20,7 @@ double monteCarloMultipleIntegraion(const std::vector<double>& lower_limits,
     int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
-    int count_of_dimensions = static_cast<int>(lower_limits.size());
+    int count_of_dimensions = static_cast<int>(count_of_dimensions);
     double max = 0;
     int id = 0;
     for (int i = 0; i < count_of_dimensions; i++) {
@@ -40,7 +40,7 @@ double monteCarloMultipleIntegraion(const std::vector<double>& lower_limits,
     } else {
         mt = std::mt19937(seed);
     }
-    std::vector<std::uniform_real_distribution<double>> rand(lower_limits.size());
+    std::vector<std::uniform_real_distribution<double>> rand(count_of_dimensions);
     for (int i = 0; i < count_of_dimensions; i++) {
         if (i == id) {
             rand[i] = std::uniform_real_distribution<double>(lower_limit, upper_limit);
@@ -51,8 +51,8 @@ double monteCarloMultipleIntegraion(const std::vector<double>& lower_limits,
 
     double ans = 0.;
     for (int i = 0; i < count_of_dots_proc; i++) {
-        std::vector<double> tmp(lower_limits.size());
-        for (int i = 0; i < lower_limits.size(); i++)
+        std::vector<double> tmp(count_of_dimensions);
+        for (int i = 0; i < count_of_dimensions; i++)
             tmp[i] = rand[i](mt);
         ans += f(tmp);
     }
@@ -76,24 +76,24 @@ double monteCarloMultipleIntegraionSequentional(const std::vector<double>& lower
                                                 int seed) {
     if (lower_limits.empty() || upper_limits.empty())
         throw "count of limits must be postive";
-    if (lower_limits.size() != upper_limits.size())
+    if (count_of_dimensions != upper_limits.size())
         throw "count of lower and upper limits must be equal";
     if (count_of_dots <= 0)
         throw "count of dots must be positive";
-    int count_of_dimensions = static_cast<int>(lower_limits.size());
+    int count_of_dimensions = static_cast<int>(count_of_dimensions);
     std::mt19937 mt;
     if (seed == -1) {
         mt = std::mt19937(time(0));
     } else {
         mt = std::mt19937(seed);
     }
-    std::vector<std::uniform_real_distribution<double>> rand(lower_limits.size());
+    std::vector<std::uniform_real_distribution<double>> rand(count_of_dimensions);
     double ans = 0.;
     for (int i = 0; i < count_of_dimensions; i++)
         rand[i] = std::uniform_real_distribution<double>(lower_limits[i], upper_limits[i]);
     for (int i = 0; i < count_of_dots; i++) {
-        std::vector<double> tmp(lower_limits.size());
-        for (int i = 0; i < lower_limits.size(); i++)
+        std::vector<double> tmp(count_of_dimensions);
+        for (int i = 0; i < count_of_dimensions; i++)
             tmp[i] = rand[i](mt);
         ans += f(tmp);
     }
