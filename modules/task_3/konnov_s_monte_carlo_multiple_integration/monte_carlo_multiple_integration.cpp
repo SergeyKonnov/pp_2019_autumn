@@ -20,7 +20,7 @@ double monteCarloMultipleIntegraion(const std::vector<double>& lower_limits,
     int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
-    int count_of_dimensions = static_cast<int>(count_of_dimensions);
+    int count_of_dimensions = static_cast<int>(lower_limits.size());
     double max = 0;
     int id = 0;
     for (int i = 0; i < count_of_dimensions; i++) {
@@ -76,11 +76,11 @@ double monteCarloMultipleIntegraionSequentional(const std::vector<double>& lower
                                                 int seed) {
     if (lower_limits.empty() || upper_limits.empty())
         throw "count of limits must be postive";
-    if (count_of_dimensions != upper_limits.size())
+    if (lower_limits.size() != upper_limits.size())
         throw "count of lower and upper limits must be equal";
     if (count_of_dots <= 0)
         throw "count of dots must be positive";
-    int count_of_dimensions = static_cast<int>(count_of_dimensions);
+    int count_of_dimensions = static_cast<int>(lower_limits.size());
     std::mt19937 mt;
     if (seed == -1) {
         mt = std::mt19937(time(0));
