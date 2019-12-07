@@ -21,18 +21,7 @@ double monteCarloMultipleIntegraion(const std::vector<double>& lower_limits,
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     int count_of_dimensions = static_cast<int>(lower_limits.size());
-    double max = 0;
-    int id = 0;
-    for (int i = 0; i < count_of_dimensions; i++) {
-        if (upper_limits[i] - lower_limits[i] > max) {
-            max = upper_limits[i] - lower_limits[i];
-            id = i;
-        }
-    }
-    double delta = max/(static_cast<double>(size));
     double count_of_dots_proc = count_of_dots/size + (rank < count_of_dots%size?1:0);
-    double lower_limit = lower_limits[id] + static_cast<double>(rank)*delta;
-    double upper_limit = lower_limit + delta;
 
     std::mt19937 mt;
     if (seed == -1) {
@@ -42,11 +31,7 @@ double monteCarloMultipleIntegraion(const std::vector<double>& lower_limits,
     }
     std::vector<std::uniform_real_distribution<double>> rand(count_of_dimensions);
     for (int i = 0; i < count_of_dimensions; i++) {
-        if (i == id) {
-            rand[i] = std::uniform_real_distribution<double>(lower_limit, upper_limit);
-        } else {
-            rand[i] = std::uniform_real_distribution<double>(lower_limits[i], upper_limits[i]);
-        }
+        rand[i] = std::uniform_real_distribution<double>(lower_limits[i], upper_limits[i]);
     }
 
     double ans = 0.;
@@ -56,16 +41,15 @@ double monteCarloMultipleIntegraion(const std::vector<double>& lower_limits,
             tmp[i] = rand[i](mt);
         ans += f(tmp);
     }
-    for (int i = 0; i < count_of_dimensions; i++) {
-        if (i == id) {
-            ans *= (upper_limit - lower_limit);
-        } else {
-            ans *= (upper_limits[i] - lower_limits[i]);
-        }
-    }
-    ans /= count_of_dots_proc;
+
     double global_ans = 0;
     MPI_Reduce(&ans, &global_ans, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+    if (rank == 0) {
+        for (int i = 0 ; i < count_of_dimensions; i++) {
+            global_ans *= (upper_limits[i] - lower_limits[i]);
+        }
+        global_ans /= count_of_dots;
+    }
     return global_ans;
 }
 
