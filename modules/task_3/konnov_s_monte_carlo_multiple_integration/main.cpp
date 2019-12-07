@@ -8,7 +8,7 @@
 #include "./monte_carlo_multiple_integration.h"
 
 #define abs_error 0.5  // ?
-#define count_of_dots 10000000
+#define count_of_dots 100000
 const double PI = acos(-1);
 
 
@@ -100,9 +100,10 @@ TEST(monteCarloMultipleIntegration, Many_Dimensional_Function_On_Small_Interval)
     for (int i = 0; i < 5; i++) {
         lower_limits[i] = -1, upper_limits[i] = 1;
     }
-    double ans = monteCarloMultipleIntegraion(lower_limits, upper_limits, count_of_dots, f, 8);
+    double count = 10000000;
+    double ans = monteCarloMultipleIntegraion(lower_limits, upper_limits, count, f, 8);
     if (rank == 0) {
-        double ans_check = monteCarloMultipleIntegraionSequentional(lower_limits, upper_limits, count_of_dots, f, 9);
+        double ans_check = monteCarloMultipleIntegraionSequentional(lower_limits, upper_limits, count, f, 9);
         ASSERT_NEAR(ans, ans_check, abs_error);
     }
 }
