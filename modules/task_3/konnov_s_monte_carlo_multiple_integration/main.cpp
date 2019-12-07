@@ -95,7 +95,7 @@ TEST(monteCarloMultipleIntegration, Many_Dimensional_Function_On_Small_Interval)
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::function<double(const std::vector<double>&)>f =
-                    [](const std::vector<double>& v) 
+                    [](const std::vector<double>& v)
                         {return v[0]*v[0] + v[1]*v[1] + v[2]*v[2] + v[3]*v[3] +  v[4]*v[4] + v[5]*v[5];};
     std::vector<double> lower_limits(5), upper_limits(5);
     for (int i = 0; i < 5; i++) {
