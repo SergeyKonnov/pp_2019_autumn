@@ -97,14 +97,13 @@ TEST(monteCarloMultipleIntegration, Many_Dimensional_Function_On_Small_Interval)
     std::function<double(const std::vector<double>&)>f =
                     [](const std::vector<double>& v)
                         {return std::abs(v[0] + v[1] + v[2] + v[3] + v[4] + v[5]);};
-    std::vector<double> lower_limits(5), upper_limits(5);
-    for (int i = 0; i < 5; i++) {
-        lower_limits[i] = -1, upper_limits[i] = 1;
+    std::vector<double> lower_limits(6), upper_limits(6);
+    for (int i = 0; i < 6; i++) {
+        lower_limits[i] = -1., upper_limits[i] = 1.;
     }
-    double count = 10000000;
-    double ans = monteCarloMultipleIntegraion(lower_limits, upper_limits, count, f, 8);
+    double ans = monteCarloMultipleIntegraion(lower_limits, upper_limits, count_of_dots, f, 8);
     if (rank == 0) {
-        double ans_check = monteCarloMultipleIntegraionSequentional(lower_limits, upper_limits, count, f, 9);
+        double ans_check = monteCarloMultipleIntegraionSequentional(lower_limits, upper_limits, count_of_dots, f, 9);
         ASSERT_NEAR(ans, ans_check, abs_error);
     }
 }

@@ -37,8 +37,9 @@ double monteCarloMultipleIntegraion(const std::vector<double>& lower_limits,
     double ans = 0.;
     std::vector<double> tmp(count_of_dimensions);
     for (int i = 0; i < count_of_dots_proc; i++) {
-        for (int j = 0; j < count_of_dimensions; j++)
+        for (int j = 0; j < count_of_dimensions; j++) {
             tmp[j] = rand[j](mt);
+        }
         ans += f(tmp);
     }
 
@@ -75,8 +76,8 @@ double monteCarloMultipleIntegraionSequentional(const std::vector<double>& lower
     double ans = 0.;
     for (int i = 0; i < count_of_dimensions; i++)
         rand[i] = std::uniform_real_distribution<double>(lower_limits[i], upper_limits[i]);
+    std::vector<double> tmp(count_of_dimensions);
     for (int i = 0; i < count_of_dots; i++) {
-        std::vector<double> tmp(count_of_dimensions);
         for (int j = 0; j < count_of_dimensions; j++)
             tmp[j] = rand[j](mt);
         ans += f(tmp);
