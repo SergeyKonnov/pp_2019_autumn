@@ -27,7 +27,7 @@ double monteCarloMultipleIntegraion(const std::vector<double>& lower_limits,
     if (seed == -1) {
         mt = std::mt19937(time(0));
     } else {
-        mt = std::mt19937(seed);
+        mt = std::mt19937(seed + rank);
     }
     std::vector<std::uniform_real_distribution<double>> rand(count_of_dimensions);
     for (int i = 0; i < count_of_dimensions; i++) {
@@ -37,8 +37,8 @@ double monteCarloMultipleIntegraion(const std::vector<double>& lower_limits,
     double ans = 0.;
     for (int i = 0; i < count_of_dots_proc; i++) {
         std::vector<double> tmp(count_of_dimensions);
-        for (int i = 0; i < count_of_dimensions; i++)
-            tmp[i] = rand[i](mt);
+        for (int j = 0; j < count_of_dimensions; j++)
+            tmp[j] = rand[j](mt);
         ans += f(tmp);
     }
 

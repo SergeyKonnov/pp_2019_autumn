@@ -102,9 +102,9 @@ TEST(monteCarloMultipleIntegration, Many_Dimensional_Function_On_Small_Interval)
         lower_limits[i] = -1, upper_limits[i] = 1;
     }
     double count = 10000000;
-    double ans = monteCarloMultipleIntegraion(lower_limits, upper_limits, count, f);
+    double ans = monteCarloMultipleIntegraion(lower_limits, upper_limits, count, f, 8);
     if (rank == 0) {
-        double ans_check = monteCarloMultipleIntegraionSequentional(lower_limits, upper_limits, count, f);
+        double ans_check = monteCarloMultipleIntegraionSequentional(lower_limits, upper_limits, count, f, 9);
         ASSERT_NEAR(ans, ans_check, abs_error);
     }
 }
